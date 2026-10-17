@@ -1,4 +1,8 @@
 import { useState, useRef } from "react";
+import Button from "./Button";
+import { TiLocationArrow } from "react-icons/ti";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -9,6 +13,27 @@ const Hero = () => {
   const totalVideos = 4;
   const nextVideoRef = useRef(null);
   const upcomingVideoIndex = (currentIndex % totalVideos) + 1;
+
+  useGSAP(() => {
+    if (hasClicked) {
+      gsap.set('#next-video', { visibility: 'visible' });
+      gsap.to('#next-video', {
+        transformOrigin: 'center center',
+        scale: 1,
+        width: '100%',
+        height: '100%',
+        duration: 1,
+        ease: 'power1.inOut',
+        onStart: () => {nextVideoRef.current.play();}
+      });
+      gsap.from('#current-video', {
+        transformOrigin: 'center center',
+        scale: 0,
+        duration: 1.5,
+        ease: 'power1.inOut'
+      });
+    }
+  }, {dependencies:[currentIndex], revertOnUpdate: true });
 
   const handleMiniVideoClick = () => {
     setHasClicked(true);
@@ -65,11 +90,23 @@ const Hero = () => {
         <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75">
           G<b>a</b>ming
         </h1>
-              <div className="absolute left-0 top-0 z-40 size-full">
-                  <div className="mt-24 px-5 sm:px-10">
-                      <h1 className="special-font hero-heading text-blue-100">Redefi<b>n</b>e</h1>
-                      <p className="mb-5 max-w-64 font-robert-regular text-blue-100">Enter the Metagame Layer.<br /> Unleash the Play conomy</p>
-                  </div>
+        <div className="absolute left-0 top-0 z-40 size-full">
+          <div className="mt-24 px-5 sm:px-10">
+            <h1 className="special-font hero-heading text-blue-100">
+              Redefi<b>n</b>e
+            </h1>
+            <p className="mb-5 max-w-64 font-robert-regular text-blue-100">
+              Enter the Metagame Layer.
+              <br /> Unleash the Play conomy
+            </p>
+            <Button
+              id="watch-trailer"
+              leftIcon={<TiLocationArrow />}
+              containerClass="bg-yellow-300 flex-center gap-1"
+            >
+              Watch Trailer
+            </Button>
+          </div>
         </div>
       </div>
     </section>
